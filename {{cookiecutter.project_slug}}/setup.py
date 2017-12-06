@@ -16,6 +16,22 @@ requirements = [
     'Click>=6.0',
     {%- endif %}
     # TODO: put package requirements here
+    'plaster_pastedeploy',
+    'pyramid >= 1.9a',
+    'pyramid_debugtoolbar',
+    'pyramid_jinja2',
+    'pyramid_retry',
+    'pyramid_tm',
+    'SQLAlchemy',
+    'transaction',
+    'zope.sqlalchemy',
+    'waitress',
+]
+
+tests_require = [
+    'WebTest >= 1.3.1',  # py3 compat
+    'pytest',
+    'pytest-cov',
 ]
 
 setup_requirements = [
@@ -26,8 +42,10 @@ setup_requirements = [
 ]
 
 test_requirements = [
+    'WebTest >= 1.3.1',  # py3 compat
 {%- if cookiecutter.use_pytest == 'y' %}
     'pytest',
+    'pytest-cov',
 {%- endif %}
     # TODO: put package test requirements here
 ]
@@ -37,7 +55,8 @@ test_requirements = [
     'BSD license': 'License :: OSI Approved :: BSD License',
     'ISC license': 'License :: OSI Approved :: ISC License (ISCL)',
     'Apache Software License 2.0': 'License :: OSI Approved :: Apache Software License',
-    'GNU General Public License v3': 'License :: OSI Approved :: GNU General Public License v3 (GPLv3)'
+    'GNU General Public License v3': 'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
+    'UNLICENSED': 'License :: Public Domain'
 } %}
 
 setup(
@@ -49,13 +68,14 @@ setup(
     author_email='{{ cookiecutter.email }}',
     url='https://github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}',
     packages=find_packages(include=['{{ cookiecutter.project_slug }}']),
-    {%- if 'no' not in cookiecutter.command_line_interface|lower %}
     entry_points={
+        'paste.app_factory': [
+            'main = {{ cookiecutter.project_slug }}:main',
+        ],
         'console_scripts': [
-            '{{ cookiecutter.project_slug }}={{ cookiecutter.project_slug }}.cli:main'
+            'initialize_{{ cookiecutter.project_slug }}_db = {{ cookiecutter.project_slug }}.scripts.initializedb:main',
         ]
     },
-    {%- endif %}
     include_package_data=True,
     install_requires=requirements,
 {%- if cookiecutter.open_source_license in license_classifiers %}
@@ -70,9 +90,6 @@ setup(
         '{{ license_classifiers[cookiecutter.open_source_license] }}',
 {%- endif %}
         'Natural Language :: English',
-        "Programming Language :: Python :: 2",
-        'Programming Language :: Python :: 2.6',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
