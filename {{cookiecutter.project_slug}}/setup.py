@@ -12,14 +12,12 @@ with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
 requirements = [
-    {%- if cookiecutter.command_line_interface|lower == 'click' %}
-    'Click>=6.0',
-    {%- endif %}
     # TODO: put package requirements here
     'plaster_pastedeploy',
     'pyramid >= 1.9a',
     'pyramid_debugtoolbar',
     'pyramid_jinja2',
+    'pyramid_mako',
     'pyramid_retry',
     'pyramid_tm',
     'SQLAlchemy',
