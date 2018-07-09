@@ -11,42 +11,11 @@ with open('README.rst') as readme_file:
 with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
-requirements = [
-    # TODO: put package requirements here
-    'plaster_pastedeploy',
-    'pyramid >= 1.9a',
-    'pyramid_debugtoolbar',
-    'pyramid_jinja2',
-    'pyramid_mako',
-    'pyramid_retry',
-    'pyramid_tm',
-    'SQLAlchemy',
-    'transaction',
-    'zope.sqlalchemy',
-    'waitress',
-]
+requirements = [{%- if cookiecutter.command_line_interface|lower == 'click' %}'Click>=6.0',{%- endif %} ]
 
-tests_require = [
-    'WebTest >= 1.3.1',  # py3 compat
-    'pytest',
-    'pytest-cov',
-]
+setup_requirements = [{%- if cookiecutter.use_pytest == 'y' %}'pytest-runner',{%- endif %} ]
 
-setup_requirements = [
-{%- if cookiecutter.use_pytest == 'y' %}
-    'pytest-runner',
-{%- endif %}
-    # TODO({{ cookiecutter.github_username }}): put setup requirements (distutils extensions, etc.) here
-]
-
-test_requirements = [
-    'WebTest >= 1.3.1',  # py3 compat
-{%- if cookiecutter.use_pytest == 'y' %}
-    'pytest',
-    'pytest-cov',
-{%- endif %}
-    # TODO: put package test requirements here
-]
+test_requirements = [{%- if cookiecutter.use_pytest == 'y' %}'pytest',{%- endif %} ]
 
 {%- set license_classifiers = {
     'MIT license': 'License :: OSI Approved :: MIT License',
@@ -58,29 +27,8 @@ test_requirements = [
 } %}
 
 setup(
-    name='{{ cookiecutter.project_slug }}',
-    version='{{ cookiecutter.version }}',
-    description="{{ cookiecutter.project_short_description }}",
-    long_description=readme + '\n\n' + history,
     author="{{ cookiecutter.full_name.replace('\"', '\\\"') }}",
     author_email='{{ cookiecutter.email }}',
-    url='https://github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}',
-    packages=find_packages(include=['{{ cookiecutter.project_slug }}', '{{ cookiecutter.project_slug }}.*']),
-    entry_points={
-        'paste.app_factory': [
-            'main = {{ cookiecutter.project_slug }}:main',
-        ],
-        'console_scripts': [
-            'initialize_{{ cookiecutter.project_slug }}_db = {{ cookiecutter.project_slug }}.scripts.initializedb:main',
-        ]
-    },
-    include_package_data=True,
-    install_requires=requirements,
-{%- if cookiecutter.open_source_license in license_classifiers %}
-    license="{{ cookiecutter.open_source_license }}",
-{%- endif %}
-    zip_safe=False,
-    keywords='{{ cookiecutter.project_slug }}',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',
@@ -88,12 +36,34 @@ setup(
         '{{ license_classifiers[cookiecutter.open_source_license] }}',
 {%- endif %}
         'Natural Language :: English',
+        "Programming Language :: Python :: 2",
+        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
     ],
+    description="{{ cookiecutter.project_short_description }}",
+    {%- if 'no' not in cookiecutter.command_line_interface|lower %}
+    entry_points={
+        'console_scripts': [
+            '{{ cookiecutter.project_slug }}={{ cookiecutter.project_slug }}.cli:main',
+        ],
+    },
+    {%- endif %}
+    install_requires=requirements,
+{%- if cookiecutter.open_source_license in license_classifiers %}
+    license="{{ cookiecutter.open_source_license }}",
+{%- endif %}
+    long_description=readme + '\n\n' + history,
+    include_package_data=True,
+    keywords='{{ cookiecutter.project_slug }}',
+    name='{{ cookiecutter.project_slug }}',
+    packages=find_packages(include=['{{ cookiecutter.project_slug }}']),
+    setup_requires=setup_requirements,
     test_suite='tests',
     tests_require=test_requirements,
-    setup_requires=setup_requirements,
+    url='https://github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}',
+    version='{{ cookiecutter.version }}',
+    zip_safe=False,
 )
