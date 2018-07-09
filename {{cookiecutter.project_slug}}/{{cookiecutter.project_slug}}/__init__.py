@@ -1,12 +1,7 @@
-from pyramid.config import Configurator
+# -*- coding: utf-8 -*-
 
+"""Top-level package for {{ cookiecutter.project_name }}."""
 
-def main(global_config, **settings):
-    """ This function returns a Pyramid WSGI application.
-    """
-    config = Configurator(settings=settings)
-    config.include('pyramid_jinja2')
-    config.include('.models')
-    config.include('.routes')
-    config.scan()
-    return config.make_wsgi_app()
+__author__ = """{{ cookiecutter.full_name }}"""
+__email__ = '{{ cookiecutter.email }}'
+__version__ = '{{ cookiecutter.version }}'

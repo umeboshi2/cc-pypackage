@@ -4,7 +4,7 @@ github_username: umeboshi2
 project_name: Project Boilerplate
 project_slug: "{{ cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_') }}"
 project_short_description: Project Boilerplate contains all the boilerplate you need to create a project.
-pypi_username: "{{ cookiecutter.github_username }}"
+pypi_username: Joseph.Rawson
 version: 0.1.0
 use_pytest: y
 use_pypi_deployment_with_travis: y
@@ -12,6 +12,7 @@ command_line_interface:
   - No command_line_interface
   - Click
 create_author_file: y
+add_pyup_badge: y
 open_source_license:
   - UNLICENSED
   - MIT license
